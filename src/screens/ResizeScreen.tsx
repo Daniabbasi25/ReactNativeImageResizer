@@ -30,8 +30,8 @@ const ResizeScreen = ({navigation, route}) => {
             type:'success',
             message:'Image save to gallery successfully'
           })
-          navigation.navigate('ImageLibraryScreen')// Not using go back because it will refresh the previous screen like this and I will be able to see new image there
-        })
+          navigation.goBack()
+         })
         .catch(error => {
           console.error('Error saving image to gallery:', error);
           showMessage({
@@ -74,8 +74,11 @@ const ResizeScreen = ({navigation, route}) => {
         color={selectedResolution?.width === 2160 && selectedResolution?.height===  2700 ? 'green' : undefined}
 
       />
- 
+      {selectedResolution &&(
+
       <CustomButton title="Export" type='Next' onPress={resizeImage} />
+      )}
+ 
     </View>
   );
 };

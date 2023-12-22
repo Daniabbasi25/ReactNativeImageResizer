@@ -23,7 +23,8 @@ import {
     PhotoIdentifier,
   } from '@react-native-camera-roll/camera-roll';import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/CustomButton';
-  
+import { useFocusEffect } from '@react-navigation/native';
+
   type Picture = {
     id?: string;
     fileName: string;
@@ -119,18 +120,20 @@ setSelectedImage({
 
  const fetchPhotos = useCallback(async () => {
   const res = await CameraRoll.getPhotos({
-    first: 10,
+    first: 200,
     assetType: 'Photos',
   });
   setPhotos(res?.edges);
   setIsLoading(false);
 }, []);
-
-useEffect(() => {
- 
+useFocusEffect(
+  React.useCallback(() => {
     fetchPhotos();
+
+   
+  }, [fetchPhotos])
+);
  
-}, [  fetchPhotos]);
   return (
     <View style={{flex:1}}>
       {isLoading?
