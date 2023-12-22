@@ -1,118 +1,122 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
+  Alert,
+  Button,
+  Image,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
+   
 } from 'react-native';
-
+import React, {useState} from 'react';
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  Asset,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+type Picture = {
+  fileName: string;
+  height: number;
+  width: number;
+  uri: string;
+};
+const App = () => {
+  const [selectedImage, setSelectedImage] = useState<Picture | undefined>();
+  const [selectedResolution, setSelectedResolution] = useState<{ width: number, height: number }|null>(null);
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+  const handleCamera = async () => {
+    try {
+      const result = await launchCamera({
+        mediaType: 'photo',
+        presentationStyle: 'popover',
+      });
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+      if (result.didCancel) {
+        console.log('cancelled');
+        return;
+      }
+      if (result.errorMessage) {
+        Alert.alert(result.errorMessage);
+        return;
+      }
+    } catch (error) {
+      Alert.alert('Something went wrong');
+    }
+  };
+  const handlePhototLibrary = async () => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        presentationStyle: 'popover',
+      });
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+      if (result.didCancel) {
+        console.log('cancelled');
+        return;
+      }
+      if (result.errorMessage) {
+        Alert.alert(result.errorMessage);
+        return;
+      }
+      console.log(result);
+      if (result.assets) {
+        const image: Asset = result.assets[0];
+        setSelectedImage({
+          fileName: image.fileName ? image.fileName : '',
+          height: image.height ? image.height : 0,
+          uri: image.uri ? image.uri : '',
+          width: image.width ? image.width : 0,
+        });
+      }
+    } catch (error) {
+      Alert.alert('Something went wrong');
+    }
+  };
+
+  const resizeImage = async () => {
+    if (selectedResolution) {
+      const { width, height } = selectedResolution;
+      const resizedImage = await ImageResizer.createResizedImage(selectedImage?.uri, width, height, 'JPEG', 100);
+
+      // Save the resized image to the gallery
+      CameraRoll.save(resizedImage.uri, { type: 'photo', album: 'YourAlbumName' })
+        .then(() => {
+          console.log('Image saved to gallery');
+        })
+        .catch((error) => {
+          console.error('Error saving image to gallery:', error);
+        });
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      {selectedImage && <Image 
+      source={{uri: selectedImage.uri}}
+      style={{width:300,height:300}}
+       />}
+
+      <Button title="Upload Image From Gallery" onPress={handlePhototLibrary} />
+      <Button title="Take Picture" onPress={handleCamera} />
+
+      <Button title="1080x1920" onPress={() => setSelectedResolution({ width: 1080, height: 1920 })} />
+      <Button title="2160x3840" onPress={() => setSelectedResolution({ width: 2160, height: 3840 })} />
+      <Button title="1080x1350" onPress={() => setSelectedResolution({ width: 1080, height: 1350 })} />
+      <Button title="2160x2700" onPress={() => setSelectedResolution({ width: 2160, height: 2700 })} />
+      <Button title="Export" onPress={resizeImage} />
+
     </SafeAreaView>
   );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
+
+const styles = StyleSheet.create({});

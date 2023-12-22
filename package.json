@@ -10,8 +10,11 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-camera-roll/camera-roll": "^7.2.2",
     "react": "18.2.0",
-    "react-native": "0.73.1"
+    "react-native": "0.73.1",
+    "react-native-image-picker": "^7.1.0",
+    "react-native-image-resizer": "^1.4.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
