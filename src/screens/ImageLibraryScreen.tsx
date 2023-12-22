@@ -38,19 +38,32 @@ const ImageLibraryScreen:FC = () => {
 
 const navigation=useNavigation()
   const handleCamera = async () => {
+    
     try {
       const result = await launchCamera({
         mediaType: 'photo',
         presentationStyle: 'popover',
       });
 
+      if (result.errorCode) {
+        Alert.alert(result.errorCode);
+        return;
+      }
       if (result.didCancel) {
         console.log('cancelled');
         return;
       }
-      if (result.errorMessage) {
-        Alert.alert(result.errorMessage);
-        return;
+      console.log(result);
+      if (result.assets) {
+        const image: Asset = result.assets[0];
+        setSelectedImage({
+          fileName: image.fileName ? image.fileName : '',
+          height: image.height ? image.height : 0,
+          uri: image.uri ? image.uri : '',
+          width: image.width ? image.width : 0,
+        });
+        //@ts-ignore
+        navigation.navigate('ResizeScreen' ,{...selectedImage})
       }
     } catch (error) {
       Alert.alert('Something went wrong');
@@ -67,8 +80,8 @@ const navigation=useNavigation()
         console.log('cancelled');
         return;
       }
-      if (result.errorMessage) {
-        Alert.alert(result.errorMessage);
+      if (result.errorCode) {
+        Alert.alert(result.errorCode);
         return;
       }
       console.log(result);
@@ -80,6 +93,8 @@ const navigation=useNavigation()
           uri: image.uri ? image.uri : '',
           width: image.width ? image.width : 0,
         });
+        //@ts-ignore
+        navigation.navigate('ResizeScreen' ,{...selectedImage})
       }
     } catch (error) {
       Alert.alert('Something went wrong');
