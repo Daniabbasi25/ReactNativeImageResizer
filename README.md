@@ -1,4 +1,8 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+This is a new [**React Native**](https://reactnative.dev) pro
+
+https://github.com/Daniabbasi25/ReactNativeImageResizer/assets/70269909/a46ab194-2677-4150-b283-9102cb714411
+
+ject, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
 
