@@ -2,16 +2,16 @@ https://github.com/Daniabbasi25/ReactNativeImageResizer/assets/70269909/a46ab194
  
 
 # Fetures in this App 
-1- user will able to chose image from library and take picture if camera is available.
-2- user will also able to see all images from gallery in app home screen and select on from there as well.
-3- user will resize image and then export it to gallery. 
+- user will able to chose image from library and take picture if camera is available.
+- user will also able to see all images from gallery in app home screen and select on from there as well.
+- user will resize image and then export it to gallery. 
 
 
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
+ [React Native Website](https://reactnative.dev) - learn more about React Native.
 - [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
